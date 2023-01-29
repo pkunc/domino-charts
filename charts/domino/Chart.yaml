@@ -6,7 +6,7 @@ version: 0.1.0
 appVersion: '12.02.0'
 home: 'https://github.com/pkunc/domino-charts'
 sources: 
-  - 'https://github.com/pkunc/domino-charts/charts/domino'
+  - 'https://github.com/pkunc/domino-charts/tree/main/charts/domino'
 maintainers:
   - name: 'Petr Kunc'
     email: 'petr.kunc@gmail.com'
