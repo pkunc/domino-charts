@@ -1,0 +1,55 @@
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.versionBadge" .  }}{{ template "chart.typeBadge" .  }}{{ template "chart.appVersionBadge" .  }}
+
+
+{{ template "chart.requirementsSection" . }}
+
+## Prerequisites
+
+- Kubernetes cluster 1.22+
+- Helm 3.0.0+
+- [Persistent Volumes (PV)](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) provisioner support in the underlying infrastructure.
+- Domino container image, created with the [domino-container](https://github.com/HCL-TECH-SOFTWARE/domino-container) building script and uploaded to a private container registry.
+
+## Installation
+
+- Create your config file with values. You can copy one of the demo files in the `examples` folder and update the values.
+- (Optional) Copy ID files to the dedicated folder.
+- Run the command:
+
+```
+helm upgrade <server_name> ./charts/domino \
+  --install \
+  --namespace domino \
+  --create-namespace \
+  --values examples/<server_name>.yaml \
+  --set-file files.certID=cert.id \
+  --set-file files.serverID=server.id \
+  --set-file files.adminID=admin.id
+
+```
+
+`<server_name>.yaml` is your config file with custom values.
+
+### Example:
+
+```
+helm upgrade castor ./charts/domino \
+  --install \
+  --namespace domino \
+  --create-namespace \
+  --values examples/castor-lke.yaml \
+  --set-file files.certID=examples/ids/cert.id \
+  --set-file files.serverID=examples/ids/server-castor.id \
+  --set-file files.adminID=examples/ids/admin.id
+```
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+## Credits
+
+Inspired and based on a great work by [Daniel Nashed](https://github.com/Daniel-Nashed) and [Thomas Hampel](https://github.com/thampel).

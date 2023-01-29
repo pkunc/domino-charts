@@ -1,0 +1,119 @@
+# Default values for domino.
+
+image:
+  # -- Name of the Domino server container image
+  name: hclcom/domino
+  # -- Tag of the Domino server container image (usually a version number or "latest")
+  tag: latest
+  imageCredentials:
+    # -- Hostname of a private container registry
+    registry: registry.showcase.blue
+    # -- Username for a private container registry
+    username: dominolab
+    # -- Password for a private container registry
+    password: SecretPassw0rd
+
+domino:
+  
+  server:
+    # -- Server type ("first" or "additional" )
+    type: first
+    # -- Server common name ("Domino" in "Domino/DemoOrg @ DemoDomain")
+    name: Domino
+    # -- Domain name ("DemoDomain" in "Domino/DemoOrg @ DemoDomain")
+    domainName: DemoDomain
+    # -- Server title (description)
+    serverTitle: Demo Server
+    # -- Set "true" if you want to use existing server.id
+    useExistingServerID: false
+    # -- Server ID filename. Used when useExistingServerID = true.
+    idFileName: server.id
+  network:
+    # -- Server DNS host name
+    hostName: domino.example.com
+  org:
+    # -- Organization name ("DemoOrg" in "Domino/DemoOrg @ DemoDomain")
+    orgName: DemoOrg
+    # -- Set "true" if you want to use existing certr.id
+    useExistingCertifierID: false
+    # -- Cert ID filename. Used when useExistingCertifierID = true.
+    idFileName: cert.id
+    # -- Cert ID password
+    certifierPassword: password
+  admin:
+    # -- Administrator first name
+    firstName: Super
+    # -- Administrator last name
+    lastName: Admin
+    # -- Set "true" if you want to use existing admin.id
+    useExistingAdminID: false
+    # -- Admin ID filename. Used when useExistingAdminID = true.
+    idFileName: admin.id
+    # -- Admin ID password
+    password: password
+  idVault:
+    # -- ID Vault password
+    idPassword: password
+
+install:
+    # -- Path to local ID files. Used when you set true in reusing Server ID, Cert ID or Admin ID.
+    # idsLocalDir: "ids"
+  # -- Path where IDs are mounted during pod creation
+  idsMountedDir: /local/ids
+  # -- Path where IDs are copied from mounted directory
+  idsDir: /tmp
+  # -- Set "true" when you want to keep existing IDs mounted to the pod. Set "false" when you do not want mount existing IDs to the pod anymore. Tip: use "true" during the first setup, then change to "false".
+  mountIds: true
+
+logs:
+  # -- Send Domino console log to the pod standard output (so it could be read using kubectl logs)
+  dominoStdOut: "yes"
+
+service:
+  # -- Should some ports be exposed outside of the cluster?
+  enabled: true
+  # -- Service type ("LoadBalancer" or "ClusterIP")
+  type: LoadBalancer
+  # -- Used when service.type = ClusterIP. IP where the service should be exposed.
+  externalIP: 10.20.30.40
+  http:
+    # -- Should HTTP be exposed directly?
+    expose: false
+    # -- Number of exposed HTTP port (probably NOT 80, because it is usually occupied by Ingress Controller service)
+    port: 3080
+  https:
+    # -- Should HTTPS be exposed directly?
+    expose: false
+    # -- Number of exposed HTTP port (probably NOT 443, because it is usually occupied by Ingress Controller service)
+    port: 3443
+  nrpc:
+    # -- Should NRPC be exposed directly?
+    expose: true
+    # -- Number of exposed NRPC port (could be 1352)
+    port: 1352
+
+ingress:
+  # -- Should Domino HTTP traffic be exposed through Ingress Controller?
+  enabled: true
+  # -- Enable TLS in Ingress Rule? (If "true", Ingress wil provide handle TLS communication with the clients.)
+  tls: false
+  # -- Ingress class. Much match "kubectl get ingressclass".
+  class: traefik
+  # -- Should Ingress Rule ise Let's Encrypt as a Certificate Issuer?
+  letsEncryptEnabled: true
+
+certManager:
+  # -- Should ClusterIssuer resource for Let's Encrypt be crearted?
+  createIssuer: true
+  # -- Type of Let's Encrypt certificate authority ("staging" or "prod")
+  leCertificate: staging
+  # -- Email used when creating a profile for Let's Encrypt
+  leEmail: name@example.com
+
+persistence:
+  # enabled: true        # Enable data persistence
+  # persistence.existingClaim  | Use a existing PVC which must be created manually before bound
+  # -- Specify the StorageClass used to provision the volume. Much be one of the classes in "kubectl get storageclass"
+  storageClass: default   # 
+  # -- Size of the data volume (/local/notesdata)
+  size: 4Gi
