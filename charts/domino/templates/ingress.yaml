@@ -31,7 +31,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Release.Name }}-domino
+                name: {{ .Release.Name }}-{{ .Chart.Name }}
                 port:
                   number: 80
 {{- end }}
