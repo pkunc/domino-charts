@@ -39,7 +39,7 @@ domino:
     # -- Cert ID filename. Used when useExistingCertifierID = true.
     idFileName: cert.id
     # -- Cert ID password
-    certifierPassword: password
+    certifierPassword: SecretPassw0rd
   admin:
     # -- Administrator first name
     firstName: Super

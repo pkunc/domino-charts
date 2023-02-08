@@ -1,6 +1,6 @@
 # domino
 
-Helm chart for HCL Domino server
+A Helm chart for HCL Domino server
 
 ![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 12.02.0](https://img.shields.io/badge/AppVersion-12.02.0-informational?style=flat-square)
 
@@ -13,12 +13,24 @@ Helm chart for HCL Domino server
 
 ## Installation
 
-- Create your config file with values. You can copy one of the demo files in the `examples` folder and update the values.
-- (Optional) Copy ID files to the dedicated folder.
-- Run the command:
+### Add Helm Repository
 
 ```
-helm upgrade <server_name> ./charts/domino \
+helm repo add pkunc https://pkunc.github.io/domino-charts/
+helm repo update
+```
+
+### Configure the chart
+
+- Create your config file with values. You can copy one of the demo files in the `examples` folder and update the values.
+- (Optional) Copy ID files to the dedicated folder.
+
+### Install the chart
+
+Run the command:
+
+```
+helm upgrade <server_name> pkunc/domino \
   --install \
   --namespace domino \
   --create-namespace \
@@ -31,10 +43,10 @@ helm upgrade <server_name> ./charts/domino \
 
 `<server_name>.yaml` is your config file with custom values.
 
-### Example:
+**Example:**
 
 ```
-helm upgrade castor ./charts/domino \
+helm upgrade castor pkunc/domino \
   --install \
   --namespace domino \
   --create-namespace \
@@ -44,7 +56,21 @@ helm upgrade castor ./charts/domino \
   --set-file files.adminID=examples/ids/admin.id
 ```
 
-## Values
+## Uninstallation
+
+To uninstall/delete the `<server_name>` deployment:
+```
+helm uninstall <server_name> -n domino
+```
+
+**Example:**
+```
+helm uninstall castor -n domino
+```
+
+## Configuration
+
+The following table lists the configurable parameters of the Domino chart and the default values.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -58,7 +84,7 @@ helm upgrade castor ./charts/domino \
 | domino.admin.useExistingAdminID | bool | `false` | Set "true" if you want to use existing admin.id |
 | domino.idVault.idPassword | string | `"password"` | ID Vault password |
 | domino.network.hostName | string | `"domino.example.com"` | Server DNS host name |
-| domino.org.certifierPassword | string | `"password"` | Cert ID password |
+| domino.org.certifierPassword | string | `"SecretPassw0rd"` | Cert ID password |
 | domino.org.idFileName | string | `"cert.id"` | Cert ID filename. Used when useExistingCertifierID = true. |
 | domino.org.orgName | string | `"DemoOrg"` | Organization name ("DemoOrg" in "Domino/DemoOrg @ DemoDomain") |
 | domino.org.useExistingCertifierID | bool | `false` | Set "true" if you want to use existing certr.id |
@@ -82,7 +108,7 @@ helm upgrade castor ./charts/domino \
 | install.mountIds | bool | `true` | Set "true" when you want to keep existing IDs mounted to the pod. Set "false" when you do not want mount existing IDs to the pod anymore. Tip: use "true" during the first setup, then change to "false". |
 | logs.dominoStdOut | string | `"yes"` | Send Domino console log to the pod standard output (so it could be read using kubectl logs) |
 | persistence.size | string | `"4Gi"` | Size of the data volume (/local/notesdata) |
-| persistence.storageClass | string | `"default"` | Specify the StorageClass used to provision the volume. Much be one of the classes in "kubectl get storageclass" |
+| persistence.storageClass | string | `""` | Specify the StorageClass used to provision the volume. Must be one of the classes in "kubectl get storageclass". If not specified, a default StorageClass is used (if exists). |
 | service.enabled | bool | `true` | Should some ports be exposed outside of the cluster? |
 | service.externalIP | string | `"10.20.30.40"` | Used when service.type = ClusterIP. IP where the service should be exposed. |
 | service.http.expose | bool | `false` | Should HTTP be exposed directly? |

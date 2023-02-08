@@ -1,6 +1,6 @@
 apiVersion: v2
 name: domino
-description: 'Helm chart for HCL Domino server'
+description: 'A Helm chart for HCL Domino server'
 type: application
 version: 0.1.0
 appVersion: '12.02.0'

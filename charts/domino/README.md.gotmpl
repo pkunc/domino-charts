@@ -15,12 +15,24 @@
 
 ## Installation
 
-- Create your config file with values. You can copy one of the demo files in the `examples` folder and update the values.
-- (Optional) Copy ID files to the dedicated folder.
-- Run the command:
+### Add Helm Repository
 
 ```
-helm upgrade <server_name> ./charts/domino \
+helm repo add pkunc https://pkunc.github.io/domino-charts/
+helm repo update
+```
+
+### Configure the chart
+
+- Create your config file with values. You can copy one of the demo files in the `examples` folder and update the values.
+- (Optional) Copy ID files to the dedicated folder.
+
+### Install the chart
+
+Run the command:
+
+```
+helm upgrade <server_name> pkunc/domino \
   --install \
   --namespace domino \
   --create-namespace \
@@ -33,10 +45,10 @@ helm upgrade <server_name> ./charts/domino \
 
 `<server_name>.yaml` is your config file with custom values.
 
-### Example:
+**Example:**
 
 ```
-helm upgrade castor ./charts/domino \
+helm upgrade castor pkunc/domino \
   --install \
   --namespace domino \
   --create-namespace \
@@ -46,7 +58,24 @@ helm upgrade castor ./charts/domino \
   --set-file files.adminID=examples/ids/admin.id
 ```
 
-{{ template "chart.valuesSection" . }}
+## Uninstallation
+
+To uninstall/delete the `<server_name>` deployment:
+```
+helm uninstall <server_name> -n domino
+```
+
+**Example:**
+```
+helm uninstall castor -n domino
+```
+
+## Configuration
+
+The following table lists the configurable parameters of the Domino chart and the default values.
+
+{{ template "chart.valuesTable" . }}
+
 
 {{ template "chart.maintainersSection" . }}
 

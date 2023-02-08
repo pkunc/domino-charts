@@ -47,6 +47,6 @@ Protocols:
   {{ if .Values.service.nrpc.expose }}NRPC (port {{ .Values.service.nrpc.port }}){{ end }}
 {{- end }}
 
-ℹ️  NOTES:
+ℹ️  NOTE:
 You can use the IP addresses directly (in a web browser or a Noites client), if you deployed the server on a public Kubernetes provider.
 If you deployed it in your own environment, you would probably need to configure your firewall, load balancers and DNS server to forward Domino traffic to this IPs.
