@@ -1,5 +1,5 @@
 # Helm Chart for HCL Domino
-Helm chart for HCL Domino server. Unofficial.
+A Helm chart for HCL Domino server. Unofficial.
 
 ## Overview
 

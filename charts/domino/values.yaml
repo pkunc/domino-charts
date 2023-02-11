@@ -112,7 +112,6 @@ certManager:
 
 persistence:
   # enabled: true        # Enable data persistence
-  # persistence.existingClaim  | Use a existing PVC which must be created manually before bound
   # -- Specify the StorageClass used to provision the volume. Must be one of the classes in "kubectl get storageclass". If not specified, a default StorageClass is used (if exists).
   storageClass: ''
   # -- Size of the data volume (/local/notesdata)

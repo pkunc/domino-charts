@@ -25,7 +25,12 @@ helm repo update
 ### Configure the chart
 
 - Create your config file with values. You can copy one of the demo files in the `examples` folder and update the values.
+- Or you can download the default values file and update it:
+```
+helm show values pkunc/domino > myvalues.yaml
+```
 - (Optional) Copy ID files to the dedicated folder.
+
 
 ### Install the chart
 
@@ -34,7 +39,7 @@ Run the command:
 ```
 helm upgrade <server_name> pkunc/domino \
   --install \
-  --namespace domino \
+  --namespace <namespace> \
   --create-namespace \
   --values examples/<server_name>.yaml \
   --set-file files.certID=cert.id \
@@ -62,7 +67,7 @@ helm upgrade castor pkunc/domino \
 
 To uninstall/delete the `<server_name>` deployment:
 ```
-helm uninstall <server_name> -n domino
+helm uninstall <server_name> -n <namespace>
 ```
 
 **Example:**
