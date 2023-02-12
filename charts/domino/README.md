@@ -6,7 +6,7 @@ A Helm chart for HCL Domino server
 
 ## Prerequisites
 
-- Kubernetes cluster 1.22+
+- Kubernetes cluster 1.18+
 - Helm 3.0.0+
 - [Persistent Volumes (PV)](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) provisioner support in the underlying infrastructure.
 - Domino container image, created with the [domino-container](https://github.com/HCL-TECH-SOFTWARE/domino-container) building script and uploaded to a private container registry.
@@ -23,6 +23,10 @@ helm repo update
 ### Configure the chart
 
 - Create your config file with values. You can copy one of the demo files in the `examples` folder and update the values.
+- Or you can download the default values file and update it:
+```
+helm show values pkunc/domino > myvalues.yaml
+```
 - (Optional) Copy ID files to the dedicated folder.
 
 ### Install the chart
@@ -32,7 +36,7 @@ Run the command:
 ```
 helm upgrade <server_name> pkunc/domino \
   --install \
-  --namespace domino \
+  --namespace <namespace> \
   --create-namespace \
   --values examples/<server_name>.yaml \
   --set-file files.certID=cert.id \
@@ -60,7 +64,7 @@ helm upgrade castor pkunc/domino \
 
 To uninstall/delete the `<server_name>` deployment:
 ```
-helm uninstall <server_name> -n domino
+helm uninstall <server_name> -n <namespace>
 ```
 
 **Example:**
@@ -97,6 +101,7 @@ The following table lists the configurable parameters of the Domino chart and th
 | image.imageCredentials.password | string | `"SecretPassw0rd"` | Password for a private container registry |
 | image.imageCredentials.registry | string | `"registry.showcase.blue"` | Hostname of a private container registry |
 | image.imageCredentials.username | string | `"dominolab"` | Username for a private container registry |
+| image.imagePullPolicy | string | `"IfNotPresent"` | When should be image pulled from the registry: "Always", "IfNotPresent", "Never" |
 | image.name | string | `"hclcom/domino"` | Name of the Domino server container image |
 | image.tag | string | `"latest"` | Tag of the Domino server container image (usually a version number or "latest") |
 | ingress.class | string | `"traefik"` | Ingress class. Much match "kubectl get ingressclass". |
@@ -105,12 +110,14 @@ The following table lists the configurable parameters of the Domino chart and th
 | ingress.tls | bool | `false` | Enable TLS in Ingress Rule? (If "true", Ingress wil provide handle TLS communication with the clients.) |
 | install.idsDir | string | `"/tmp"` | Path where IDs are copied from mounted directory |
 | install.idsMountedDir | string | `"/local/ids"` | Path where IDs are mounted during pod creation |
-| install.mountIds | bool | `true` | Set "true" when you want to keep existing IDs mounted to the pod. Set "false" when you do not want mount existing IDs to the pod anymore. Tip: use "true" during the first setup, then change to "false". |
+| install.mountIds | bool | `true` | Set "true" when you want to keep existing IDs mounted to the pod.  Set "false" when you do not want mount existing IDs to the pod anymore.  Tip: use "true" during the first setup, then change to "false". |
 | logs.dominoStdOut | string | `"yes"` | Send Domino console log to the pod standard output (so it could be read using kubectl logs) |
+| persistence.enabled | bool | `true` | Should dominodata volume be persistent? Warning: if you specify "false", your Domino data will be deleted after each pod restart! |
 | persistence.size | string | `"4Gi"` | Size of the data volume (/local/notesdata) |
-| persistence.storageClass | string | `""` | Specify the StorageClass used to provision the volume. Must be one of the classes in "kubectl get storageclass". If not specified, a default StorageClass is used (if exists). |
+| persistence.storageClass | string | `""` | Specify the StorageClass used to provision the volume. Must be one of the classes in "kubectl get storageclass".  If not specified, a default StorageClass is used (if exists). |
+| pod.nodeSelector | object | `{}` | If set, Domino is deployed only to the node that matches the label. Example: "domino: castor" |
 | service.enabled | bool | `true` | Should some ports be exposed outside of the cluster? |
-| service.externalIP | string | `"10.20.30.40"` | Used when service.type = ClusterIP. IP where the service should be exposed. |
+| service.externalIP | string | `"10.20.30.40"` | Used only when service.type = ClusterIP. IP where the service should be exposed. |
 | service.http.expose | bool | `false` | Should HTTP be exposed directly? |
 | service.http.port | int | `3080` | Number of exposed HTTP port (probably NOT 80, because it is usually occupied by Ingress Controller service) |
 | service.https.expose | bool | `false` | Should HTTPS be exposed directly? |

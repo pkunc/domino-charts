@@ -38,6 +38,7 @@ spec:
       containers:
         - name: domino
           image: "{{ .Values.image.imageCredentials.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
 
           env:
             - name: LANG
@@ -113,14 +114,12 @@ spec:
       initContainers:
         - name: domino-startup
           image: busybox:latest
-
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
           command: [ 'sh', '-c', 'chmod 777 /local' ]
-
           securityContext:
             privileged: true
             runAsNonRoot: false
             runAsUser: 0
-
           volumeMounts:
             - name: dominodata
               mountPath: /local
@@ -129,11 +128,15 @@ spec:
         - name: autoconfig
           configMap:
             name: {{ .Release.Name }}-autoconfig
-
         - name: notes-ids
           secret:
             secretName: {{ .Release.Name }}-ids
+        {{- if not .Values.persistence.enabled }}
+        - name: dominodata
+          emptyDir: {}
+        {{- end }}
 
+  {{ if .Values.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: dominodata
@@ -146,3 +149,4 @@ spec:
         resources:
           requests:
             storage: {{ .Values.persistence.size }}
+  {{- end }}

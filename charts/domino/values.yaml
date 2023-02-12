@@ -12,6 +12,8 @@ image:
     username: dominolab
     # -- Password for a private container registry
     password: SecretPassw0rd
+  # -- When should be image pulled from the registry: "Always", "IfNotPresent", "Never"
+  imagePullPolicy: IfNotPresent
 
 domino:
   server:
@@ -61,7 +63,9 @@ install:
   idsMountedDir: /local/ids
   # -- Path where IDs are copied from mounted directory
   idsDir: /tmp
-  # -- Set "true" when you want to keep existing IDs mounted to the pod. Set "false" when you do not want mount existing IDs to the pod anymore. Tip: use "true" during the first setup, then change to "false".
+  # -- Set "true" when you want to keep existing IDs mounted to the pod. 
+  # Set "false" when you do not want mount existing IDs to the pod anymore. 
+  # Tip: use "true" during the first setup, then change to "false".
   mountIds: true
 
 pod:
@@ -114,8 +118,11 @@ certManager:
   leEmail: name@example.com
 
 persistence:
-  # enabled: true        # Enable data persistence
-  # -- Specify the StorageClass used to provision the volume. Must be one of the classes in "kubectl get storageclass". If not specified, a default StorageClass is used (if exists).
+  # -- Should dominodata volume be persistent?
+  # Warning: if you specify "false", your Domino data will be deleted after each pod restart!
+  enabled: true
+  # -- Specify the StorageClass used to provision the volume. Must be one of the classes in "kubectl get storageclass". 
+  # If not specified, a default StorageClass is used (if exists).
   storageClass: ''
   # -- Size of the data volume (/local/notesdata)
   size: 4Gi
