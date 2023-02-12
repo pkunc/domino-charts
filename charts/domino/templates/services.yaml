@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: hcl-domino
-    server: {{ .Values.domino.server.name }}
+    server: {{ .Values.domino.server.name | lower }}
     type: headless
     {{- include "common.labels" . | nindent 4 }}
 
@@ -15,7 +15,7 @@ spec:
   clusterIP: None     # this makes the service "headless"
   selector:
     app: hcl-domino
-    server: {{ .Values.domino.server.name }}
+    server: {{ .Values.domino.server.name | lower }}
 
   ports:
     - name: http
@@ -43,7 +43,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: hcl-domino
-    server: {{ .Values.domino.server.name }}
+    server: {{ .Values.domino.server.name | lower }}
     type: external
     {{- include "common.labels" . | nindent 4 }}
 
@@ -51,7 +51,7 @@ spec:
   type: {{ .Values.service.type }}
   selector:
     app: hcl-domino
-    server: {{ .Values.domino.server.name }}
+    server: {{ .Values.domino.server.name | lower }}
 
   ports:
     {{- if .Values.service.http.expose }}

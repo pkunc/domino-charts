@@ -14,7 +14,6 @@ image:
     password: SecretPassw0rd
 
 domino:
-  
   server:
     # -- Server type ("first" or "additional" )
     type: first
@@ -64,6 +63,10 @@ install:
   idsDir: /tmp
   # -- Set "true" when you want to keep existing IDs mounted to the pod. Set "false" when you do not want mount existing IDs to the pod anymore. Tip: use "true" during the first setup, then change to "false".
   mountIds: true
+
+pod:
+  # -- If set, Domino is deployed only to the node that matches the label. Example: "domino: castor"
+  nodeSelector: {}
 
 logs:
   # -- Send Domino console log to the pod standard output (so it could be read using kubectl logs)

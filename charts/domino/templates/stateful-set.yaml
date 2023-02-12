@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: hcl-domino
-    server: {{ .Values.domino.server.name }}
+    server: {{ .Values.domino.server.name | lower }}
     role: primary
     {{- include "common.labels" . | nindent 4 }}
 
@@ -15,14 +15,18 @@ spec:
   selector:
     matchLabels:
       app: hcl-domino       # has to match .spec.template.metadata.labels
-      server: {{ .Values.domino.server.name }}
+      server: {{ .Values.domino.server.name | lower }}
   serviceName: {{ .Release.Name }}-domino   # has to match .metadata.name in Headless Service definition
   template:
     metadata:
       labels:
         app: hcl-domino     # has to match .spec.selector.matchLabels
-        server: {{ .Values.domino.server.name }}
+        server: {{ .Values.domino.server.name | lower }}
     spec:
+      {{- if .Values.pod.nodeSelector }}
+      nodeSelector: 
+        {{- .Values.pod.nodeSelector | toYaml | nindent 8 }}
+      {{- end }}
       imagePullSecrets:
         - name: regcred
       securityContext:
