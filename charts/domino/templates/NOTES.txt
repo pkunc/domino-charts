@@ -37,9 +37,17 @@ Protocols:
 Domino is configured to use a service type {{ .Values.service.type | quote }} to expose its protocols:
 IP Address: 
   Run this command and get the IP:
-    $ kubectl get --namespace {{ $ns }} service {{ $serviceName }} -o jsonpath="{.status.loadBalancer.ingress[0].ip}"
+{{- if eq .Values.service.type "LoadBalancer" -}}
+    {{ nindent 4 "" }}$ kubectl get --namespace {{ $ns }} service {{ $serviceName }} -o jsonpath="{.status.loadBalancer.ingress[0].ip}"
 {{- if (lookup "v1" "Service" $ns $serviceName) -}}
 {{ (first (lookup "v1" "Service" $ns $serviceName).status.loadBalancer.ingress).ip | nindent 4 }}
+{{- end }}
+{{- end }}
+{{- if eq .Values.service.type "ClusterIP" -}}
+    {{ nindent 4 "" }}$ kubectl get --namespace {{ $ns }} service {{ $serviceName }} -o jsonpath="{.spec.externalIPs[0]}"
+{{- if (lookup "v1" "Service" $ns $serviceName) -}}
+{{ (first (lookup "v1" "Service" $ns $serviceName).spec.externalIPs) | nindent 4 }}
+{{- end }}
 {{- end }}
 Protocols:
   {{ if .Values.service.http.expose }}HTTP (port {{ .Values.service.http.port }}){{ end }}

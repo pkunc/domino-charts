@@ -73,7 +73,9 @@ spec:
       targetPort: 1352
     {{- end }}
 
-  # externalIPs:
-  #   - {{ .Values.service.externalIP }}
+  {{- if and (eq .Values.service.type "ClusterIP") .Values.service.externalIP }}
+  externalIPs:
+    - {{ .Values.service.externalIP }}
+  {{- end }}
 
 {{- end }}
