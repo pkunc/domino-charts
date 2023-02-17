@@ -53,6 +53,10 @@ spec:
               value: "30"
             - name: DominoConfigRestartWaitString 
               value: "Server started on physical node"
+            {{- if .Values.install.CustomNotesdataZip }}
+            - name: CustomNotesdataZip 
+              value: {{ .Values.install.CustomNotesdataZip | quote }}
+            {{- end }}
 
           securityContext:
             capabilities:
@@ -110,6 +114,7 @@ spec:
               memory: "4Gi"
               cpu: "2000m"
 
+      {{ if .Values.persistence.enabled }}
       # this init container is a work-around to change file-system permissions for some local stoarge providers
       initContainers:
         - name: domino-startup
@@ -123,6 +128,7 @@ spec:
           volumeMounts:
             - name: dominodata
               mountPath: /local
+      {{- end }}
 
       volumes:
         - name: autoconfig
