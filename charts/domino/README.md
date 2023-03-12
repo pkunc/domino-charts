@@ -86,6 +86,8 @@ The following table lists the configurable parameters of the Domino chart and th
 | domino.admin.lastName | string | `"Admin"` | Administrator last name |
 | domino.admin.password | string | `"password"` | Admin ID password |
 | domino.admin.useExistingAdminID | bool | `false` | Set "true" if you want to use existing admin.id |
+| domino.appConfiguration.webLoginForm | string | `"DWALoginForm"` | Name of the form that should be used as a login form in domcfg.nsf |
+| domino.appConfiguration.webLoginFormDB | string | `"iwaredir.nsf"` | Filename of the NSF database that where the webLoginForm is stored |
 | domino.idVault.idPassword | string | `"password"` | ID Vault password |
 | domino.network.hostName | string | `"domino.example.com"` | Server DNS host name |
 | domino.org.certifierPassword | string | `"SecretPassw0rd"` | Cert ID password |
@@ -108,6 +110,7 @@ The following table lists the configurable parameters of the Domino chart and th
 | ingress.enabled | bool | `true` | Should Domino HTTP traffic be exposed through Ingress Controller? |
 | ingress.letsEncryptEnabled | bool | `true` | Should Ingress Rule ise Let's Encrypt as a Certificate Issuer? |
 | ingress.tls | bool | `false` | Enable TLS in Ingress Rule? (If "true", Ingress wil provide handle TLS communication with the clients.) |
+| install.CustomNotesdataZip | string | `""` | Path (filesystem or URL) to a zip file that will be downloaded and extracted into the dominodata directory |
 | install.idsDir | string | `"/tmp"` | Path where IDs are copied from mounted directory |
 | install.idsMountedDir | string | `"/local/ids"` | Path where IDs are mounted during pod creation |
 | install.mountIds | bool | `true` | Set "true" when you want to keep existing IDs mounted to the pod.  Set "false" when you do not want mount existing IDs to the pod anymore.  Tip: use "true" during the first setup, then change to "false". |

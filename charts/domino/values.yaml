@@ -7,11 +7,7 @@ image:
   tag: latest
   imageCredentials:
     # -- Hostname of a private container registry
-    registry: registry.showcase.blue
-    # -- Username for a private container registry
-    username: dominolab
-    # -- Password for a private container registry
-    password: SecretPassw0rd
+    registry: registry.example.com
   # -- When should be image pulled from the registry: "Always", "IfNotPresent", "Never"
   imagePullPolicy: IfNotPresent
 
@@ -55,6 +51,11 @@ domino:
   idVault:
     # -- ID Vault password
     idPassword: password
+  appConfiguration:
+    # -- Name of the form that should be used as a login form in domcfg.nsf
+    webLoginForm: DWALoginForm
+    # -- Filename of the NSF database that where the webLoginForm is stored
+    webLoginFormDB: iwaredir.nsf
 
 install:
     # -- Path to local ID files. Used when you set true in reusing Server ID, Cert ID or Admin ID.
@@ -67,6 +68,8 @@ install:
   # Set "false" when you do not want mount existing IDs to the pod anymore. 
   # Tip: use "true" during the first setup, then change to "false".
   mountIds: true
+  # -- Path (filesystem or URL) to a zip file that will be downloaded and extracted into the dominodata directory
+  CustomNotesdataZip: ""
 
 pod:
   # -- If set, Domino is deployed only to the node that matches the label. Example: "domino: castor"
