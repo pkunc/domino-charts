@@ -1,0 +1,22 @@
+# Default values for domino-shared.
+
+image:
+  imageCredentials:
+    # -- Hostname of a private container registry
+    registry: registry.example.com
+    # -- Username for a private container registry
+    username: registry_user
+    # -- Password for a private container registry
+    password: registry_password
+
+ingress:
+  # -- Ingress class. Much match "kubectl get ingressclass".
+  class: traefik
+
+certManager:
+  # -- Should ClusterIssuer resource for Let's Encrypt be crearted?
+  createIssuer: true
+  # -- Type of Let's Encrypt certificate authority ("staging" or "prod")
+  leCertificate: staging
+  # -- Email used when creating a profile for Let's Encrypt
+  leEmail: name@example.com

@@ -1,0 +1,13 @@
+apiVersion: v2
+name: domino-shared
+description: 'A Helm chart for HCL Domino server - shared elements'
+type: application
+version: 0.1.0
+appVersion: '12.02.0'
+home: 'https://github.com/pkunc/domino-charts'
+sources: 
+  - 'https://github.com/pkunc/domino-charts/tree/main/charts/domino'
+maintainers:
+  - name: 'Petr Kunc'
+    email: 'petr.kunc@gmail.com'
+    url: 'http://petrkunc.net'
