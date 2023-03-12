@@ -1,0 +1,17 @@
+# My custom values for Domino server deployemnt
+
+image:
+  imageCredentials:
+    registry: registry.example.com
+    username: RegUserName
+    password: RegPassword
+
+ingress:
+  enabled: true
+  tls: true
+  class: nginx
+  letsEncryptEnabled: true
+
+certManager:
+  leCertificate: staging     # staging | prod
+  leEmail: name@example.com
