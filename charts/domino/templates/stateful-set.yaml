@@ -87,6 +87,8 @@ spec:
           ports:
                 - containerPort: 1352
                   protocol: TCP
+                - containerPort: 9443
+                  protocol: TCP
                 - containerPort: 80
                   protocol: TCP
                 - containerPort: 443

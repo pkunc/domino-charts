@@ -71,9 +71,9 @@ The following table lists the configurable parameters of the Domino chart and th
 | certManager.createIssuer | bool | `true` | Should ClusterIssuer resource for Let's Encrypt be crearted? |
 | certManager.leCertificate | string | `"staging"` | Type of Let's Encrypt certificate authority ("staging" or "prod") |
 | certManager.leEmail | string | `"name@example.com"` | Email used when creating a profile for Let's Encrypt |
-| image.imageCredentials.password | string | `"SecretPassw0rd"` | Password for a private container registry |
-| image.imageCredentials.registry | string | `"registry.showcase.blue"` | Hostname of a private container registry |
-| image.imageCredentials.username | string | `"dominolab"` | Username for a private container registry |
+| image.imageCredentials.password | string | `"registry_password"` | Password for a private container registry |
+| image.imageCredentials.registry | string | `"registry.example.com"` | Hostname of a private container registry |
+| image.imageCredentials.username | string | `"registry_user"` | Username for a private container registry |
 | ingress.class | string | `"traefik"` | Ingress class. Much match "kubectl get ingressclass". |
 
 ## Maintainers

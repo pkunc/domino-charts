@@ -19,7 +19,7 @@ fi
 
 #------------
 
-echo "[ℹ]  Deploying Domino server '$SERVER' on Kubernetes cluister provider '$PROVIDER'"
+echo "[ℹ]  Deploying Domino server '$SERVER' on Kubernetes cluster provider '$PROVIDER'"
 
 # Deploy a Domino server using a Helm chart with necessary parameters
 helm upgrade $SERVER ./charts/domino --install \

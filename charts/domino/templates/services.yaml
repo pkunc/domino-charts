@@ -26,10 +26,10 @@ spec:
       protocol: TCP
       port: 443
       targetPort: 443
-    - name: nrpc
-      protocol: TCP
-      port: 1352
-      targetPort: 1352
+    # - name: nrpc
+    #   protocol: TCP
+    #   port: 1352
+    #   targetPort: 1352
 
 ---
 
@@ -71,6 +71,12 @@ spec:
       protocol: TCP
       port: {{ .Values.service.nrpc.port }}
       targetPort: 1352
+    {{- end }}
+    {{- if .Values.service.nomad.expose }}
+    - name: nomad
+      protocol: TCP
+      port: {{ .Values.service.nomad.port }}
+      targetPort: 9443
     {{- end }}
 
   {{- if and (eq .Values.service.type "ClusterIP") .Values.service.externalIP }}

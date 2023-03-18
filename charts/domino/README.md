@@ -100,15 +100,15 @@ The following table lists the configurable parameters of the Domino chart and th
 | domino.server.serverTitle | string | `"Demo Server"` | Server title (description) |
 | domino.server.type | string | `"first"` | Server type ("first" or "additional" ) |
 | domino.server.useExistingServerID | bool | `false` | Set "true" if you want to use existing server.id |
-| image.imageCredentials.password | string | `"SecretPassw0rd"` | Password for a private container registry |
-| image.imageCredentials.registry | string | `"registry.showcase.blue"` | Hostname of a private container registry |
-| image.imageCredentials.username | string | `"dominolab"` | Username for a private container registry |
+| image.imageCredentials.registry | string | `"registry.example.com"` | Hostname of a private container registry |
 | image.imagePullPolicy | string | `"IfNotPresent"` | When should be image pulled from the registry: "Always", "IfNotPresent", "Never" |
 | image.name | string | `"hclcom/domino"` | Name of the Domino server container image |
 | image.tag | string | `"latest"` | Tag of the Domino server container image (usually a version number or "latest") |
 | ingress.class | string | `"traefik"` | Ingress class. Much match "kubectl get ingressclass". |
 | ingress.enabled | bool | `true` | Should Domino HTTP traffic be exposed through Ingress Controller? |
 | ingress.letsEncryptEnabled | bool | `true` | Should Ingress Rule ise Let's Encrypt as a Certificate Issuer? |
+| ingress.nomad.enabled | bool | `false` | Should Nomad Web traffic be exposed through Ingress Controller? (It requires a dedicated hostname.) |
+| ingress.nomad.hostname | string | `"domino-nomad.example.com"` | Hostname for Nomad web access (Usually different than a hostname for a classic Domino HTTP access.) |
 | ingress.tls | bool | `false` | Enable TLS in Ingress Rule? (If "true", Ingress wil provide handle TLS communication with the clients.) |
 | install.CustomNotesdataZip | string | `""` | Path (filesystem or URL) to a zip file that will be downloaded and extracted into the dominodata directory |
 | install.idsDir | string | `"/tmp"` | Path where IDs are copied from mounted directory |
@@ -125,6 +125,8 @@ The following table lists the configurable parameters of the Domino chart and th
 | service.http.port | int | `3080` | Number of exposed HTTP port (probably NOT 80, because it is usually occupied by Ingress Controller service) |
 | service.https.expose | bool | `false` | Should HTTPS be exposed directly? |
 | service.https.port | int | `3443` | Number of exposed HTTP port (probably NOT 443, because it is usually occupied by Ingress Controller service) |
+| service.nomad.expose | bool | `false` | Should Nomad be exposed directly? |
+| service.nomad.port | int | `9443` | Number of exposed Nomad port (could be 1352) |
 | service.nrpc.expose | bool | `true` | Should NRPC be exposed directly? |
 | service.nrpc.port | int | `1352` | Number of exposed NRPC port (could be 1352) |
 | service.type | string | `"LoadBalancer"` | Service type ("LoadBalancer" or "ClusterIP") |

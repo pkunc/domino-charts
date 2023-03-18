@@ -101,6 +101,11 @@ service:
     expose: true
     # -- Number of exposed NRPC port (could be 1352)
     port: 1352
+  nomad:
+    # -- Should Nomad be exposed directly?
+    expose: false
+    # -- Number of exposed Nomad port (could be 1352)
+    port: 9443
 
 ingress:
   # -- Should Domino HTTP traffic be exposed through Ingress Controller?
@@ -111,6 +116,11 @@ ingress:
   class: traefik
   # -- Should Ingress Rule ise Let's Encrypt as a Certificate Issuer?
   letsEncryptEnabled: true
+  nomad:
+    # -- Should Nomad Web traffic be exposed through Ingress Controller? (It requires a dedicated hostname.)
+    enabled: false
+    # -- Hostname for Nomad web access (Usually different than a hostname for a classic Domino HTTP access.)
+    hostname: domino-nomad.example.com
 
 certManager:
   # -- Should ClusterIssuer resource for Let's Encrypt be crearted?
