@@ -60,14 +60,14 @@ domino:
 install:
     # -- Path to local ID files. Used when you set true in reusing Server ID, Cert ID or Admin ID.
     # idsLocalDir: "ids"
-  # -- Path where IDs are mounted during pod creation
+  # -- Path in a pod where IDs are mounted during the pod creation
   idsMountedDir: /local/ids
-  # -- Path where IDs are copied from mounted directory
+  # -- Path in a pod where IDs are copied from a mounted directory
   idsDir: /tmp
   # -- Set "true" when you want to keep existing IDs mounted to the pod. 
   # Set "false" when you do not want mount existing IDs to the pod anymore. 
   # Tip: use "true" during the first setup, then change to "false".
-  mountIds: true
+  mountIds: false
   # -- Path (filesystem or URL) to a zip file that will be downloaded and extracted into the dominodata directory
   CustomNotesdataZip: ""
 
@@ -76,12 +76,12 @@ pod:
   nodeSelector: {}
 
 logs:
-  # -- Send Domino console log to the pod standard output (so it could be read using kubectl logs)
+  # -- Send Domino console log to the pod's standard output (so it could be read using kubectl logs)
   dominoStdOut: "yes"
 
 service:
-  # -- Should some ports be exposed outside of the cluster?
-  enabled: true
+  # -- Should some ports be exposed outside of the cluster (by exposing the port, not through Ingress controller)?
+  enabled: false
   # -- Service type ("LoadBalancer" or "ClusterIP")
   type: LoadBalancer
   # -- Used only when service.type = ClusterIP. IP where the service should be exposed.
@@ -98,7 +98,7 @@ service:
     port: 3443
   nrpc:
     # -- Should NRPC be exposed directly?
-    expose: true
+    expose: false
     # -- Number of exposed NRPC port (could be 1352)
     port: 1352
   nomad:
@@ -112,10 +112,10 @@ ingress:
   enabled: true
   # -- Enable TLS in Ingress Rule? (If "true", Ingress wil provide handle TLS communication with the clients.)
   tls: false
-  # -- Ingress class. Much match "kubectl get ingressclass".
-  class: traefik
+  # -- Ingress class. Must match "kubectl get ingressclass".
+  class: nginx
   # -- Should Ingress Rule ise Let's Encrypt as a Certificate Issuer?
-  letsEncryptEnabled: true
+  letsEncryptEnabled: false
   nomad:
     # -- Should Nomad Web traffic be exposed through Ingress Controller? (It requires a dedicated hostname.)
     enabled: false
