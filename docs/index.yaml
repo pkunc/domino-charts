@@ -3,9 +3,9 @@ entries:
   domino:
   - apiVersion: v2
     appVersion: 12.02.0
-    created: "2023-01-29T18:40:49.073009+01:00"
-    description: Helm chart for HCL Domino server
-    digest: 1f4158ec3ea5a1baeeed4432f39962c07ff7d2832cc1e2b2db762735e36c2d07
+    created: "2023-03-21T20:15:52.477749+01:00"
+    description: A Helm chart for HCL Domino server
+    digest: 1a01ee7863b4e07d6455bf63b6c6f16f419c0351473c9c21b002f754c56fb1f4
     home: https://github.com/pkunc/domino-charts
     maintainers:
     - email: petr.kunc@gmail.com
@@ -18,4 +18,22 @@ entries:
     urls:
     - domino-0.1.0.tgz
     version: 0.1.0
-generated: "2023-01-29T18:40:49.07199+01:00"
+  domino-shared:
+  - apiVersion: v2
+    appVersion: 12.02.0
+    created: "2023-03-21T20:15:52.47819+01:00"
+    description: A Helm chart for HCL Domino server - shared elements
+    digest: 4d9645a2bef42669ac6f393b95f71a75f010d51d8e7768b35438f579d3bd8ad6
+    home: https://github.com/pkunc/domino-charts
+    maintainers:
+    - email: petr.kunc@gmail.com
+      name: Petr Kunc
+      url: http://petrkunc.net
+    name: domino-shared
+    sources:
+    - https://github.com/pkunc/domino-charts/tree/main/charts/domino
+    type: application
+    urls:
+    - domino-shared-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-03-21T20:15:52.473409+01:00"
