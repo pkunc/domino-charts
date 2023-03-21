@@ -22,6 +22,13 @@ helm repo add pkunc https://pkunc.github.io/domino-charts/
 helm repo update
 ```
 
+### Deploy shared components
+
+- Domino deployment requires some components that are shared by all Domino pods in the Kubernetes cluster. 
+  These components have to be installed once, before you deploy your first Domino server.
+- Follow the installation steps in the chart [README](../domino-shared/README.md).
+
+
 ### Configure the chart
 
 - Create your config file with values. You can copy one of the demo files in the `examples` folder and update the values.
@@ -32,7 +39,7 @@ helm show values pkunc/domino > myvalues.yaml
 - (Optional) Copy ID files to the dedicated folder.
 
 
-### Install the chart
+### Install Domino server with the chart
 
 Run the command:
 

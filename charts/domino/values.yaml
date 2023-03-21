@@ -36,7 +36,7 @@ domino:
     # -- Cert ID filename. Used when useExistingCertifierID = true.
     idFileName: cert.id
     # -- Cert ID password
-    certifierPassword: SecretPassw0rd
+    certifierPassword: SecretOrgPassw0rd
   admin:
     # -- Administrator first name
     firstName: Super
@@ -47,10 +47,10 @@ domino:
     # -- Admin ID filename. Used when useExistingAdminID = true.
     idFileName: admin.id
     # -- Admin ID password
-    password: password
+    password: SecretAdminPassw0rd
   idVault:
     # -- ID Vault password
-    idPassword: password
+    idPassword: SecretVaultPassw0rd
   appConfiguration:
     # -- Name of the form that should be used as a login form in domcfg.nsf
     webLoginForm: DWALoginForm
@@ -132,8 +132,8 @@ certManager:
 
 persistence:
   # -- Should dominodata volume be persistent?
-  # Warning: if you specify "false", your Domino data will be deleted after each pod restart!
-  enabled: true
+  # Warning: if you specify "false", your Domino data will be DELETED each time you restart the pod!
+  enabled: false
   # -- Specify the StorageClass used to provision the volume. Must be one of the classes in "kubectl get storageclass". 
   # If not specified, a default StorageClass is used (if exists).
   storageClass: ''

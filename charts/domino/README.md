@@ -20,6 +20,12 @@ helm repo add pkunc https://pkunc.github.io/domino-charts/
 helm repo update
 ```
 
+### Deploy shared components
+
+- Domino deployment requires some components that are shared by all Domino pods in the Kubernetes cluster.
+  These components have to be installed once, before you deploy your first Domino server.
+- Follow the installation steps in the chart [README](../domino-shared/README.md).
+
 ### Configure the chart
 
 - Create your config file with values. You can copy one of the demo files in the `examples` folder and update the values.
@@ -29,7 +35,7 @@ helm show values pkunc/domino > myvalues.yaml
 ```
 - (Optional) Copy ID files to the dedicated folder.
 
-### Install the chart
+### Install Domino server with the chart
 
 Run the command:
 
@@ -84,13 +90,13 @@ The following table lists the configurable parameters of the Domino chart and th
 | domino.admin.firstName | string | `"Super"` | Administrator first name |
 | domino.admin.idFileName | string | `"admin.id"` | Admin ID filename. Used when useExistingAdminID = true. |
 | domino.admin.lastName | string | `"Admin"` | Administrator last name |
-| domino.admin.password | string | `"password"` | Admin ID password |
+| domino.admin.password | string | `"SecretAdminPassw0rd"` | Admin ID password |
 | domino.admin.useExistingAdminID | bool | `false` | Set "true" if you want to use existing admin.id |
 | domino.appConfiguration.webLoginForm | string | `"DWALoginForm"` | Name of the form that should be used as a login form in domcfg.nsf |
 | domino.appConfiguration.webLoginFormDB | string | `"iwaredir.nsf"` | Filename of the NSF database that where the webLoginForm is stored |
-| domino.idVault.idPassword | string | `"password"` | ID Vault password |
+| domino.idVault.idPassword | string | `"SecretVaultPassw0rd"` | ID Vault password |
 | domino.network.hostName | string | `"domino.example.com"` | Server DNS host name |
-| domino.org.certifierPassword | string | `"SecretPassw0rd"` | Cert ID password |
+| domino.org.certifierPassword | string | `"SecretOrgPassw0rd"` | Cert ID password |
 | domino.org.idFileName | string | `"cert.id"` | Cert ID filename. Used when useExistingCertifierID = true. |
 | domino.org.orgName | string | `"DemoOrg"` | Organization name ("DemoOrg" in "Domino/DemoOrg @ DemoDomain") |
 | domino.org.useExistingCertifierID | bool | `false` | Set "true" if you want to use existing certr.id |
@@ -104,22 +110,22 @@ The following table lists the configurable parameters of the Domino chart and th
 | image.imagePullPolicy | string | `"IfNotPresent"` | When should be image pulled from the registry: "Always", "IfNotPresent", "Never" |
 | image.name | string | `"hclcom/domino"` | Name of the Domino server container image |
 | image.tag | string | `"latest"` | Tag of the Domino server container image (usually a version number or "latest") |
-| ingress.class | string | `"traefik"` | Ingress class. Much match "kubectl get ingressclass". |
+| ingress.class | string | `"nginx"` | Ingress class. Must match "kubectl get ingressclass". |
 | ingress.enabled | bool | `true` | Should Domino HTTP traffic be exposed through Ingress Controller? |
-| ingress.letsEncryptEnabled | bool | `true` | Should Ingress Rule ise Let's Encrypt as a Certificate Issuer? |
+| ingress.letsEncryptEnabled | bool | `false` | Should Ingress Rule ise Let's Encrypt as a Certificate Issuer? |
 | ingress.nomad.enabled | bool | `false` | Should Nomad Web traffic be exposed through Ingress Controller? (It requires a dedicated hostname.) |
 | ingress.nomad.hostname | string | `"domino-nomad.example.com"` | Hostname for Nomad web access (Usually different than a hostname for a classic Domino HTTP access.) |
 | ingress.tls | bool | `false` | Enable TLS in Ingress Rule? (If "true", Ingress wil provide handle TLS communication with the clients.) |
 | install.CustomNotesdataZip | string | `""` | Path (filesystem or URL) to a zip file that will be downloaded and extracted into the dominodata directory |
-| install.idsDir | string | `"/tmp"` | Path where IDs are copied from mounted directory |
-| install.idsMountedDir | string | `"/local/ids"` | Path where IDs are mounted during pod creation |
-| install.mountIds | bool | `true` | Set "true" when you want to keep existing IDs mounted to the pod.  Set "false" when you do not want mount existing IDs to the pod anymore.  Tip: use "true" during the first setup, then change to "false". |
-| logs.dominoStdOut | string | `"yes"` | Send Domino console log to the pod standard output (so it could be read using kubectl logs) |
-| persistence.enabled | bool | `true` | Should dominodata volume be persistent? Warning: if you specify "false", your Domino data will be deleted after each pod restart! |
+| install.idsDir | string | `"/tmp"` | Path in a pod where IDs are copied from a mounted directory |
+| install.idsMountedDir | string | `"/local/ids"` | Path in a pod where IDs are mounted during the pod creation |
+| install.mountIds | bool | `false` | Set "true" when you want to keep existing IDs mounted to the pod.  Set "false" when you do not want mount existing IDs to the pod anymore.  Tip: use "true" during the first setup, then change to "false". |
+| logs.dominoStdOut | string | `"yes"` | Send Domino console log to the pod's standard output (so it could be read using kubectl logs) |
+| persistence.enabled | bool | `false` | Should dominodata volume be persistent? Warning: if you specify "false", your Domino data will be DELETED each time you restart the pod! |
 | persistence.size | string | `"4Gi"` | Size of the data volume (/local/notesdata) |
 | persistence.storageClass | string | `""` | Specify the StorageClass used to provision the volume. Must be one of the classes in "kubectl get storageclass".  If not specified, a default StorageClass is used (if exists). |
 | pod.nodeSelector | object | `{}` | If set, Domino is deployed only to the node that matches the label. Example: "domino: castor" |
-| service.enabled | bool | `true` | Should some ports be exposed outside of the cluster? |
+| service.enabled | bool | `false` | Should some ports be exposed outside of the cluster (by exposing the port, not through Ingress controller)? |
 | service.externalIP | string | `"10.20.30.40"` | Used only when service.type = ClusterIP. IP where the service should be exposed. |
 | service.http.expose | bool | `false` | Should HTTP be exposed directly? |
 | service.http.port | int | `3080` | Number of exposed HTTP port (probably NOT 80, because it is usually occupied by Ingress Controller service) |
@@ -127,7 +133,7 @@ The following table lists the configurable parameters of the Domino chart and th
 | service.https.port | int | `3443` | Number of exposed HTTP port (probably NOT 443, because it is usually occupied by Ingress Controller service) |
 | service.nomad.expose | bool | `false` | Should Nomad be exposed directly? |
 | service.nomad.port | int | `9443` | Number of exposed Nomad port (could be 1352) |
-| service.nrpc.expose | bool | `true` | Should NRPC be exposed directly? |
+| service.nrpc.expose | bool | `false` | Should NRPC be exposed directly? |
 | service.nrpc.port | int | `1352` | Number of exposed NRPC port (could be 1352) |
 | service.type | string | `"LoadBalancer"` | Service type ("LoadBalancer" or "ClusterIP") |
 
