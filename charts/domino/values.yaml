@@ -48,6 +48,11 @@ domino:
     idFileName: admin.id
     # -- Admin ID password
     password: SecretAdminPassw0rd
+  existingServer:
+    # -- Server common name of the existing server to use to replicate the directory (example: "AdminServer")
+    CN: ""
+    # -- Server DNS host name or IP address of the existing server.
+    hostNameOrIP: ""
   idVault:
     # -- ID Vault password
     idPassword: SecretVaultPassw0rd

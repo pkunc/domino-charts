@@ -94,6 +94,8 @@ The following table lists the configurable parameters of the Domino chart and th
 | domino.admin.useExistingAdminID | bool | `false` | Set "true" if you want to use existing admin.id |
 | domino.appConfiguration.webLoginForm | string | `"DWALoginForm"` | Name of the form that should be used as a login form in domcfg.nsf |
 | domino.appConfiguration.webLoginFormDB | string | `"iwaredir.nsf"` | Filename of the NSF database that where the webLoginForm is stored |
+| domino.existingServer.CN | string | `""` | Server common name of the existing server to use to replicate the directory (example: "AdminServer") |
+| domino.existingServer.hostNameOrIP | string | `""` | Server DNS host name or IP address of the existing server. |
 | domino.idVault.idPassword | string | `"SecretVaultPassw0rd"` | ID Vault password |
 | domino.network.hostName | string | `"domino.example.com"` | Server DNS host name |
 | domino.org.certifierPassword | string | `"SecretOrgPassw0rd"` | Cert ID password |

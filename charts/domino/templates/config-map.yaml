@@ -38,9 +38,15 @@ data:
         "admin": {
           "firstName": {{ .Values.domino.admin.firstName | quote }},
           "lastName": {{ .Values.domino.admin.lastName | quote }},
+          "CN": "{{ .Values.domino.admin.firstName }} {{ .Values.domino.admin.lastName }}",
           "useExistingAdminID": {{ .Values.domino.admin.useExistingAdminID }},
           "IDFilePath": "{{ .Values.install.idsDir }}/{{ .Values.domino.admin.idFileName }}",
           "password": {{ .Values.domino.admin.password | quote }}
+        },
+
+        "existingServer": {
+          "CN": {{ .Values.domino.existingServer.CN | quote }},
+          "hostNameOrIP": {{ .Values.domino.existingServer.hostNameOrIP | quote }}
         },
 
         "notesINI": {
@@ -83,6 +89,7 @@ data:
         "startServerAfterConfiguration": true 
       },
 
+      {{ if eq .Values.domino.server.type "first" }}
       "IDVault": {
         "name": "O={{ .Values.domino.org.orgName | lower  }}_vault",
         "description": "{{ .Values.domino.org.orgName }} ID Vault",
@@ -102,6 +109,7 @@ data:
           "description": "{{ .Values.domino.org.orgName }} Vault Master Policy Description"
         }
       },
+      {{- end }}
 
       "appConfiguration": {
 
