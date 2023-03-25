@@ -76,6 +76,16 @@ install:
   # -- Path (filesystem or URL) to a zip file that will be downloaded and extracted into the dominodata directory
   CustomNotesdataZip: ""
 
+rbac:
+  # -- Should a role for RBAC to be created?
+  create: true
+
+serviceAccount:
+  # -- Should a service account to be created?
+  create: true
+  # -- The name of the service account. If not set and create is true, a name is generated using the release name.
+  name: ""
+
 pod:
   # -- If set, Domino is deployed only to the node that matches the label. Example: "domino: castor"
   nodeSelector: {}

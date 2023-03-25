@@ -23,6 +23,7 @@ spec:
         app: hcl-domino     # has to match .spec.selector.matchLabels
         server: {{ .Values.domino.server.name | lower }}
     spec:
+      serviceAccountName: {{ include "domino.serviceAccountName" . }}
       {{- if .Values.pod.nodeSelector }}
       nodeSelector: 
         {{- .Values.pod.nodeSelector | toYaml | nindent 8 }}

@@ -28,4 +28,5 @@ helm upgrade $SERVER ./charts/domino --install \
   --values examples/$SERVER-$PROVIDER.yaml \
   --set-file files.certID=examples/ids/cert.id \
   --set-file files.serverID=examples/ids/server-$SERVER.id \
-  --set-file files.adminID=examples/ids/admin.id
+  --set-file files.adminID=examples/ids/admin.id \
+  --atomic
