@@ -1,3 +1,4 @@
-*.id
+examples/ids/*.id
 .DS_Store
 .vscode
+domino-shared-academy.yaml
