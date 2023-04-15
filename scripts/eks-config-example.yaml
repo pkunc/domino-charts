@@ -1,0 +1,28 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: ekscluster
+  region: us-west-1
+  version: "1.25"
+managedNodeGroups:
+  - amiFamily: AmazonLinux2
+    desiredCapacity: 2
+    instanceType: t3a.xlarge
+    labels:
+      alpha.eksctl.io/cluster-name: mycluster
+      alpha.eksctl.io/nodegroup-name: linux-nodes
+    maxSize: 2
+    minSize: 2
+    name: linux-nodes
+    privateNetworking: false
+    releaseVersion: ""
+    ssh:
+      allow: true
+      publicKeyPath: ~/.ssh/id_ed25519_aws.pub
+    tags:
+      alpha.eksctl.io/nodegroup-name: linux-nodes
+      alpha.eksctl.io/nodegroup-type: managed
+    volumeIOPS: 3000
+    volumeSize: 80
+    volumeThroughput: 125
+    volumeType: gp3
