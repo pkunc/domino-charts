@@ -7,7 +7,10 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
+BOLD="\033[1m"
 NC='\033[0m'        # No Color
+
+#------------
 
 # Check if one argument is passed
 
@@ -53,26 +56,34 @@ fi
 
 #------------
 
-QUESTION="Do you want to recreate the pod $POD? (y/n) "
-
-read -p "$QUESTION" yn
-
-
 # Confirm the pod recreation
+
+QUESTION="${BLUE}Do you want to recreate the pod ${BOLD}$POD?${NC}${BLUE} (y/n) ${NC}"
+
+# read -p "$QUESTION" yn
+read -p "$(echo -e $QUESTION)" yn
 
 case $yn in 
 	[yY] ) echo "[ℹ]  Recreating pod $POD";;
 	[nN] ) echo "[ℹ]  Exiting...";
 		exit;;
-	* ) echo invalid response;
+	* ) echo Invalid response;
 		exit 1;;
 esac
 
+#------------
 
 # Recreate the pod
 
-echo "[ℹ]  Deleting the current pod and creating a new one. Could take a few minutes...";
+echo "[ℹ]  Deleting the current pod and creating a new one. Could take a few minutes..."
 RECREATE_STATUS=$(kubectl get pod $POD -n domino -o yaml | kubectl replace --grace-period=120 --force --timeout=120s -f - 2>&1)
 echo Result: $RECREATE_STATUS
 
+#------------
+
+# Print the final info
+
 echo -e "${GREEN}[✔]  The pod was successfully recreated.${NC}"
+echo "[ℹ]  NOTE: Even if the 'kubectl replace' returns a timeout error, the pod is probably restarted."
+echo "[ℹ]  This is the pod status:"
+kubectl get pod $POD -n domino
