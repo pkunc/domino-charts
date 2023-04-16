@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Create EKS cluster using eksctl tool
+# Create EKS Kubernetes cluster using eksctl tool
 
 # First, just a dry run
 # eksctl create cluster \

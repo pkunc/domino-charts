@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Use the script when yxou want to "restart" a pod.
+# In Kubernetes, there is no command like "restart a pod".
+# Instead, we force relod the pod parameteres, which causes the pod to delete and recrete.
+# Because the paramteres are the same it has an effect of restarting the pod.
+
+# IMPORTANT: If you do not deploy a pod with StatefulSet, 
+#            you could loose the data in the attached Persistent Volume Claim!
+
 #------------
 
 # Values for colored output
