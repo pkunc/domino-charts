@@ -26,10 +26,14 @@ spec:
       protocol: TCP
       port: 443
       targetPort: 443
-    # - name: nrpc
-    #   protocol: TCP
-    #   port: 1352
-    #   targetPort: 1352
+    - name: nrpc
+      protocol: TCP
+      port: 1352
+      targetPort: 1352
+    - name: nomad
+      protocol: TCP
+      port: 9443
+      targetPort: 9443
 
 ---
 

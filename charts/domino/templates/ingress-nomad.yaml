@@ -31,7 +31,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Release.Name }}-{{ .Chart.Name }}-ext
+                name: {{ .Release.Name }}-{{ .Chart.Name }}
                 port:
                   number: 9443
 {{- end }}
