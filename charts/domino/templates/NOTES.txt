@@ -18,7 +18,7 @@ After installation is complete, you can access the server.
 🌐 ACCESS - WEB TRAFFIC
 Domino is configured to use an Ingress Controller as a reverse proxy for its web interface.
 Run this command and get the IPs:
-  $ kubectl get --namespace {{ $ns }} ingress {{ $ingressName }}  -o jsonpath="{range .status.loadBalancer.ingress[*]}{.ip}{'\n'}{end}"
+  $ kubectl get --namespace {{ $ns }} ingress {{ $ingressName }}  -o jsonpath="{range .status.loadBalancer.ingress[*]}{.*}{'\n'}{end}"
 Protocols:
   HTTP (port 80)
   HTTPS (port 443)
@@ -29,17 +29,16 @@ Protocols:
 Domino is configured to use a service type {{ .Values.service.type | quote }} to expose its protocols:
 Run this command and get the IPs:
 {{- if eq .Values.service.type "LoadBalancer" }}
-  $ kubectl get --namespace {{ $ns }} service {{ $serviceName }} -o jsonpath="{range .status.loadBalancer.ingress[*]}{.ip}{'\n'}{end}"
+  $ kubectl get --namespace {{ $ns }} service {{ $serviceName }} -o jsonpath="{range .status.loadBalancer.ingress[*]}{.*}{'\n'}{end}"
 {{- end }}
 {{- if eq .Values.service.type "ClusterIP" }}
   $ kubectl get --namespace {{ $ns }} service {{ $serviceName }} -o jsonpath="{.spec.externalIPs[*]}{'\n'}"
 {{- end }}
 Protocols:
+  {{ if .Values.service.nrpc.expose }}NRPC (port {{ .Values.service.nrpc.port }}){{ end }}
   {{ if .Values.service.http.expose }}HTTP (port {{ .Values.service.http.port }}){{ end }}
   {{ if .Values.service.https.expose }}HTTPS (port {{ .Values.service.https.port }}){{ end }}
-  {{ if .Values.service.nrpc.expose }}NRPC (port {{ .Values.service.nrpc.port }}){{ end }}
 {{- end }}
 
 ℹ️  NOTE:
-Set the DNS record for {{ .Values.domino.network.hostName }} to point either to these IP addresses (if they are accessible from the Internet) 
-or to a load balancer in from of these IP addresses.
+Set the DNS records to point to these IP addresses or hostnames to allow access for your users.

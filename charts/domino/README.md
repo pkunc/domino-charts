@@ -11,6 +11,10 @@ A Helm chart for HCL Domino server
 - [Persistent Volumes (PV)](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) provisioner support in the underlying infrastructure.
 - Domino container image, created with the [domino-container](https://github.com/HCL-TECH-SOFTWARE/domino-container) building script and uploaded to a private container registry.
 
+Optional (and recommended):
+- [Ingress NGINX](../../scripts/deploy-nginx.sh)
+- [cert-manager](../../scripts/deploy-cert-manager.sh) (to manage Let's Encrypt certificates for Ingress NGINX)
+
 ## Installation
 
 ### Add Helm Repository
@@ -22,7 +26,7 @@ helm repo update
 
 ### Deploy shared components
 
-- Domino deployment requires some components that are shared by all Domino pods in the Kubernetes cluster.
+- Domino deployment requires some components (`domino-shared`) that are shared by all Domino pods in the Kubernetes cluster.
   These components have to be installed once, before you deploy your first Domino server.
 - Follow the installation steps in the chart [README](../domino-shared/README.md).
 
@@ -91,53 +95,56 @@ The following table lists the configurable parameters of the Domino chart and th
 | domino.admin.idFileName | string | `"admin.id"` | Admin ID filename. Used when useExistingAdminID = true. |
 | domino.admin.lastName | string | `"Admin"` | Administrator last name |
 | domino.admin.password | string | `"SecretAdminPassw0rd"` | Admin ID password |
-| domino.admin.useExistingAdminID | bool | `false` | Set "true" if you want to use existing admin.id |
-| domino.appConfiguration.webLoginForm | string | `"DWALoginForm"` | Name of the form that should be used as a login form in domcfg.nsf |
-| domino.appConfiguration.webLoginFormDB | string | `"iwaredir.nsf"` | Filename of the NSF database that where the webLoginForm is stored |
+| domino.admin.useExistingAdminID | bool | `false` | Set "true" if you want to use the existing admin.id |
+| domino.appConfiguration.webLoginForm | string | `"$$LoginUserFormMFA"` | Name of the form that should be used as a login form (Example: DWALoginForm, $$LoginUserFormMFA) |
+| domino.appConfiguration.webLoginFormDB | string | `"domcfg.nsf"` | Filename of the NSF database where the webLoginForm is stored (Example: iwaredir.nsf, domcfg.nsf) |
 | domino.existingServer.CN | string | `""` | Server common name of the existing server to use to replicate the directory (example: "AdminServer") |
-| domino.existingServer.hostNameOrIP | string | `""` | Server DNS host name or IP address of the existing server. |
+| domino.existingServer.hostNameOrIP | string | `""` | Server DNS hostname or IP address of the existing server. |
 | domino.idVault.idPassword | string | `"SecretVaultPassw0rd"` | ID Vault password |
-| domino.network.hostName | string | `"domino.example.com"` | Server DNS host name |
+| domino.network.hostName | string | `"domino.example.com"` | Server DNS hostname |
 | domino.org.certifierPassword | string | `"SecretOrgPassw0rd"` | Cert ID password |
 | domino.org.idFileName | string | `"cert.id"` | Cert ID filename. Used when useExistingCertifierID = true. |
 | domino.org.orgName | string | `"DemoOrg"` | Organization name ("DemoOrg" in "Domino/DemoOrg @ DemoDomain") |
-| domino.org.useExistingCertifierID | bool | `false` | Set "true" if you want to use existing certr.id |
+| domino.org.useExistingCertifierID | bool | `false` | Set "true" if you want to use existing cert.id |
 | domino.server.domainName | string | `"DemoDomain"` | Domain name ("DemoDomain" in "Domino/DemoOrg @ DemoDomain") |
 | domino.server.idFileName | string | `"server.id"` | Server ID filename. Used when useExistingServerID = true. |
 | domino.server.name | string | `"Domino"` | Server common name ("Domino" in "Domino/DemoOrg @ DemoDomain") |
 | domino.server.serverTitle | string | `"Demo Server"` | Server title (description) |
 | domino.server.type | string | `"first"` | Server type ("first" or "additional" ) |
-| domino.server.useExistingServerID | bool | `false` | Set "true" if you want to use existing server.id |
+| domino.server.useExistingServerID | bool | `false` | Set "true" if you want to use the existing server.id |
 | image.imageCredentials.registry | string | `"registry.example.com"` | Hostname of a private container registry |
 | image.imagePullPolicy | string | `"IfNotPresent"` | When should be image pulled from the registry: "Always", "IfNotPresent", "Never" |
 | image.name | string | `"hclcom/domino"` | Name of the Domino server container image |
 | image.tag | string | `"latest"` | Tag of the Domino server container image (usually a version number or "latest") |
 | ingress.class | string | `"nginx"` | Ingress class. Must match "kubectl get ingressclass". |
 | ingress.enabled | bool | `true` | Should Domino HTTP traffic be exposed through Ingress Controller? |
-| ingress.letsEncryptEnabled | bool | `false` | Should Ingress Rule ise Let's Encrypt as a Certificate Issuer? |
+| ingress.letsEncryptEnabled | bool | `false` | Should Ingress Rule use Let's Encrypt as a Certificate Issuer? |
 | ingress.nomad.enabled | bool | `false` | Should Nomad Web traffic be exposed through Ingress Controller? (It requires a dedicated hostname.) |
 | ingress.nomad.hostname | string | `"domino-nomad.example.com"` | Hostname for Nomad web access (Usually different than a hostname for a classic Domino HTTP access.) |
-| ingress.tls | bool | `false` | Enable TLS in Ingress Rule? (If "true", Ingress wil provide handle TLS communication with the clients.) |
+| ingress.tls | bool | `false` | Enable TLS in Ingress Rule? (If "true" Ingress will provide handle TLS communication with the clients.) |
 | install.CustomNotesdataZip | string | `""` | Path (filesystem or URL) to a zip file that will be downloaded and extracted into the dominodata directory |
 | install.idsDir | string | `"/tmp"` | Path in a pod where IDs are copied from a mounted directory |
 | install.idsMountedDir | string | `"/local/ids"` | Path in a pod where IDs are mounted during the pod creation |
-| install.mountIds | bool | `false` | Set "true" when you want to keep existing IDs mounted to the pod.  Set "false" when you do not want mount existing IDs to the pod anymore.  Tip: use "true" during the first setup, then change to "false". |
+| install.mountIds | bool | `false` | Set "true" to keep existing IDs mounted to the pod.  Set "false" when you do not want to mount existing IDs to the pod anymore.  Tip: use "true" during the first setup, then change to "false". |
 | logs.dominoStdOut | string | `"yes"` | Send Domino console log to the pod's standard output (so it could be read using kubectl logs) |
-| persistence.enabled | bool | `false` | Should dominodata volume be persistent? Warning: if you specify "false", your Domino data will be DELETED each time you restart the pod! |
+| persistence.enabled | bool | `false` | Should dominodata volume be persistent? Warning: if you specify "false" your Domino data will be DELETED each time you restart the pod! |
 | persistence.size | string | `"4Gi"` | Size of the data volume (/local/notesdata) |
 | persistence.storageClass | string | `""` | Specify the StorageClass used to provision the volume. Must be one of the classes in "kubectl get storageclass".  If not specified, a default StorageClass is used (if exists). |
 | pod.nodeSelector | object | `{}` | If set, Domino is deployed only to the node that matches the label. Example: "domino: castor" |
-| service.enabled | bool | `false` | Should some ports be exposed outside of the cluster (by exposing the port, not through Ingress controller)? |
-| service.externalIP | string | `"10.20.30.40"` | Used only when service.type = ClusterIP. IP where the service should be exposed. |
+| rbac.create | bool | `true` | Should a role for RBAC be created? |
+| service.enabled | bool | `false` | Should some ports be exposed outside of the cluster (by exposing the port, not through the Ingress controller)? |
+| service.externalIP | string | `"10.20.30.40"` | Used only when service.type = ClusterIP. Enter the IP where the service should be exposed. |
 | service.http.expose | bool | `false` | Should HTTP be exposed directly? |
-| service.http.port | int | `3080` | Number of exposed HTTP port (probably NOT 80, because it is usually occupied by Ingress Controller service) |
+| service.http.port | int | `3080` | Exposed HTTP port number (probably NOT 80, because it is usually occupied by Ingress Controller service) |
 | service.https.expose | bool | `false` | Should HTTPS be exposed directly? |
-| service.https.port | int | `3443` | Number of exposed HTTP port (probably NOT 443, because it is usually occupied by Ingress Controller service) |
+| service.https.port | int | `3443` | Exposed HTTP port number (probably NOT 443, because it is usually occupied by Ingress Controller service) |
 | service.nomad.expose | bool | `false` | Should Nomad be exposed directly? |
-| service.nomad.port | int | `9443` | Number of exposed Nomad port (could be 1352) |
+| service.nomad.port | int | `9443` | Exposed Nomad port number (could be 1352) |
 | service.nrpc.expose | bool | `false` | Should NRPC be exposed directly? |
-| service.nrpc.port | int | `1352` | Number of exposed NRPC port (could be 1352) |
+| service.nrpc.port | int | `1352` | Exposed NRPC port number (could be 1352) |
 | service.type | string | `"LoadBalancer"` | Service type ("LoadBalancer" or "ClusterIP") |
+| serviceAccount.create | bool | `true` | Should a service account be created? |
+| serviceAccount.name | string | `""` | The name of the service account. A name is generated using the release name if not set and 'create' is true. |
 
 ## Maintainers
 

@@ -21,17 +21,17 @@ domino:
     domainName: DemoDomain
     # -- Server title (description)
     serverTitle: Demo Server
-    # -- Set "true" if you want to use existing server.id
+    # -- Set "true" if you want to use the existing server.id
     useExistingServerID: false
     # -- Server ID filename. Used when useExistingServerID = true.
     idFileName: server.id
   network:
-    # -- Server DNS host name
+    # -- Server DNS hostname
     hostName: domino.example.com
   org:
     # -- Organization name ("DemoOrg" in "Domino/DemoOrg @ DemoDomain")
     orgName: DemoOrg
-    # -- Set "true" if you want to use existing certr.id
+    # -- Set "true" if you want to use existing cert.id
     useExistingCertifierID: false
     # -- Cert ID filename. Used when useExistingCertifierID = true.
     idFileName: cert.id
@@ -42,7 +42,7 @@ domino:
     firstName: Super
     # -- Administrator last name
     lastName: Admin
-    # -- Set "true" if you want to use existing admin.id
+    # -- Set "true" if you want to use the existing admin.id
     useExistingAdminID: false
     # -- Admin ID filename. Used when useExistingAdminID = true.
     idFileName: admin.id
@@ -51,16 +51,16 @@ domino:
   existingServer:
     # -- Server common name of the existing server to use to replicate the directory (example: "AdminServer")
     CN: ""
-    # -- Server DNS host name or IP address of the existing server.
+    # -- Server DNS hostname or IP address of the existing server.
     hostNameOrIP: ""
   idVault:
     # -- ID Vault password
     idPassword: SecretVaultPassw0rd
   appConfiguration:
-    # -- Name of the form that should be used as a login form in domcfg.nsf
-    webLoginForm: DWALoginForm
-    # -- Filename of the NSF database that where the webLoginForm is stored
-    webLoginFormDB: iwaredir.nsf
+    # -- Filename of the NSF database where the webLoginForm is stored (Example: iwaredir.nsf, domcfg.nsf)
+    webLoginFormDB: domcfg.nsf
+    # -- Name of the form that should be used as a login form (Example: DWALoginForm, $$LoginUserFormMFA)
+    webLoginForm: $$LoginUserFormMFA
 
 install:
     # -- Path to local ID files. Used when you set true in reusing Server ID, Cert ID or Admin ID.
@@ -69,21 +69,21 @@ install:
   idsMountedDir: /local/ids
   # -- Path in a pod where IDs are copied from a mounted directory
   idsDir: /tmp
-  # -- Set "true" when you want to keep existing IDs mounted to the pod. 
-  # Set "false" when you do not want mount existing IDs to the pod anymore. 
+  # -- Set "true" to keep existing IDs mounted to the pod. 
+  # Set "false" when you do not want to mount existing IDs to the pod anymore. 
   # Tip: use "true" during the first setup, then change to "false".
   mountIds: false
   # -- Path (filesystem or URL) to a zip file that will be downloaded and extracted into the dominodata directory
   CustomNotesdataZip: ""
 
 rbac:
-  # -- Should a role for RBAC to be created?
+  # -- Should a role for RBAC be created?
   create: true
 
 serviceAccount:
-  # -- Should a service account to be created?
+  # -- Should a service account be created?
   create: true
-  # -- The name of the service account. If not set and create is true, a name is generated using the release name.
+  # -- The name of the service account. A name is generated using the release name if not set and 'create' is true.
   name: ""
 
 pod:
@@ -95,41 +95,41 @@ logs:
   dominoStdOut: "yes"
 
 service:
-  # -- Should some ports be exposed outside of the cluster (by exposing the port, not through Ingress controller)?
+  # -- Should some ports be exposed outside of the cluster (by exposing the port, not through the Ingress controller)?
   enabled: false
   # -- Service type ("LoadBalancer" or "ClusterIP")
   type: LoadBalancer
-  # -- Used only when service.type = ClusterIP. IP where the service should be exposed.
+  # -- Used only when service.type = ClusterIP. Enter the IP where the service should be exposed.
   externalIP: 10.20.30.40
   http:
     # -- Should HTTP be exposed directly?
     expose: false
-    # -- Number of exposed HTTP port (probably NOT 80, because it is usually occupied by Ingress Controller service)
+    # -- Exposed HTTP port number (probably NOT 80, because it is usually occupied by Ingress Controller service)
     port: 3080
   https:
     # -- Should HTTPS be exposed directly?
     expose: false
-    # -- Number of exposed HTTP port (probably NOT 443, because it is usually occupied by Ingress Controller service)
+    # -- Exposed HTTP port number (probably NOT 443, because it is usually occupied by Ingress Controller service)
     port: 3443
   nrpc:
     # -- Should NRPC be exposed directly?
     expose: false
-    # -- Number of exposed NRPC port (could be 1352)
+    # -- Exposed NRPC port number (could be 1352)
     port: 1352
   nomad:
     # -- Should Nomad be exposed directly?
     expose: false
-    # -- Number of exposed Nomad port (could be 1352)
+    # -- Exposed Nomad port number (could be 1352)
     port: 9443
 
 ingress:
   # -- Should Domino HTTP traffic be exposed through Ingress Controller?
   enabled: true
-  # -- Enable TLS in Ingress Rule? (If "true", Ingress wil provide handle TLS communication with the clients.)
+  # -- Enable TLS in Ingress Rule? (If "true" Ingress will provide handle TLS communication with the clients.)
   tls: false
   # -- Ingress class. Must match "kubectl get ingressclass".
   class: nginx
-  # -- Should Ingress Rule ise Let's Encrypt as a Certificate Issuer?
+  # -- Should Ingress Rule use Let's Encrypt as a Certificate Issuer?
   letsEncryptEnabled: false
   nomad:
     # -- Should Nomad Web traffic be exposed through Ingress Controller? (It requires a dedicated hostname.)
@@ -147,7 +147,7 @@ certManager:
 
 persistence:
   # -- Should dominodata volume be persistent?
-  # Warning: if you specify "false", your Domino data will be DELETED each time you restart the pod!
+  # Warning: if you specify "false" your Domino data will be DELETED each time you restart the pod!
   enabled: false
   # -- Specify the StorageClass used to provision the volume. Must be one of the classes in "kubectl get storageclass". 
   # If not specified, a default StorageClass is used (if exists).
