@@ -11,7 +11,7 @@ image:
 
 ingress:
   # -- Ingress class. Much match "kubectl get ingressclass".
-  class: traefik
+  class: nginx
 
 certManager:
   # -- Should ClusterIssuer resource for Let's Encrypt be crearted?
