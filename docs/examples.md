@@ -1,26 +1,25 @@
 # Domino deployments – Examples
-Use the following examplas as an inspiration for creationg your own values files, for deploying Domino server according to your needs.
+Use the following examples as an inspiration for creating your own values files for deploying the Domino server according to your needs.
 
-You will probably need to combine multiple examples to create the final file - for example: using persistent volume + enabling Ingress for HTTP + opening port for NRPC + reusing existing IDs
+You will probably need to combine multiple examples to create the final file - for example: using the persistent volume + enabling Ingress for HTTP + opening the port for NRPC + reusing existing IDs
 
 
-* Importatnt *
-The examples shares the same deployment name, sometime also host name or ports.
+**Importatnt** \
+The examples share the same deployment name, sometimes the hostname or ports.
 Before you try an example, uninstall the previous example with this command:
 ```
 helm uninstall alpha --namespace domino
 ```
 
 
-
-
 ## Default – For testing the basics
-**Start here.** \
+**Start here.**
+
 Just the Helm chart default values. \
 Creates new Domino server in a new Domino domain. \
 Web access (via Ingress) is enabled.
 
-**Usecase:** Primary for testing the environment. The server has no persistent volume attached, so the Domino data directory is lost when a pod is recreated. Once you deploy a Domino server witht he defautl values, you can continue with more complex configurations.
+**Usecase:** Primary for testing the environment. The server has no persistent volume attached, so the Domino data directory is lost when a pod is recreated. Once you deploy a Domino server with the default values, you can continue with more complex configurations.
 
 **Filename:** `none`
 
@@ -40,11 +39,11 @@ Check that you deployed the Domino pod correctly:
 kubectl logs -n domino alpha-domino-0
 ```
 
-Since we did not specify a correct hostname, nor expose any ports, you cannot connect to Domino yet. \
-Try the following examples that allows you to parametrize your Domino to allow access from web browser or a Notes client.
+Since we did not specify a correct hostname nor expose any ports, you cannot connect to Domino yet. \
+Try the following examples that allow you to parametrize your Domino to enable access from a web browser or a Notes client.
 
 
-## Organization, server and domain names
+## Organization, server, and domain names
 Creates a new Domino server in a new Domino domain, with custom organazation name, server name and administrator name.
 
 
@@ -64,11 +63,10 @@ helm upgrade alpha pkunc/domino \
 ```
 
 
-
 ## Persistent volume
 Creates a Persistent Volume Claim and assigns it to the Domino pod. You need to specify a StorageClass, provided by your Kubernetes provider.
 
-**Add these setings to all servers where you want to keep Domino data directory.**
+**Add these settings to all servers where you want to keep the Domino data directory.**
 
 **Usecase:** You need to add Persistent Volume to all your Domino servers in production.
 
@@ -86,20 +84,86 @@ helm upgrade alpha pkunc/domino \
 ```
 
 ## Web access – Ingress with Let's Encrypt 
+Creates an Ingress rule that forwards HTTP requests from the Internet to your Domino pod through an Ingress Controller.
+Note: The Ingress Controller must be already deployed in the Kubernetes cluster.
+If you do not have one, you can try [Ingress NGINX](../scripts/deploy-nginx.sh).
+You have to specify the Ingress class
+
+**Important** \
+If you want to use cert-manager to obtain a Let's Encrypt TLS certificate for your Domino server,
+you must enable and configure Ingress and cert-manager in ['domino-shared'](../charts/domino-shared/README.md) Helm chart.
+
+**Add these settings to all servers where you want to expose Domino web through Ingress Controller.**
+
+**Usecase:** You want to allow web access to your Domino server.
+
+**Filename:** `ingress-domino.yaml`
+
+**Command:**
+
+```
+helm upgrade alpha pkunc/domino \
+  --install \
+  --namespace domino \
+  --create-namespace \
+  --values examples/ingress-domino.yaml \
+  --atomic
+```
+
+## Nomad Web access
+The same as the previous example (Web access – Ingress with Let's Encrypt ), but this time we also expose Nomad web \
+through the Ingress Controller.
+The special setting is needed because the Nomad server on Domino does not use the Domino HTTP stack - it uses its stack and \
+use the default port 9443.
+
+**Add these settings to all servers where you want to expose the Nomad server through Ingress Controller.**
+
+**Usecase:** You want to allow access to Nomad web running on your Domino server.
+
+**Filename:** `ingress-nomad.yaml`
+
+**Command:**
+
+```
+helm upgrade alpha pkunc/domino \
+  --install \
+  --namespace domino \
+  --create-namespace \
+  --values examples/ingress-nomad.yaml \
+  --atomic
+```
 
 
 ## NRPC access
+Domino uses NRPC protocol (port 1352) to communicate between the Notes client and the Domino server and between two Domino servers.
+The protocol cannot be passed through an Ingress Controller and has to be exposed directly.
+In the test environment, you can use the Service type ClusterIP, but in production, it will be LoadBalancer.
+Your Kubernetes cloud provider handles these services and creates a public IP hostname for them.
 
+**Add these settings to all servers where you want to expose NRPC protocol.**
 
-## Nomad Web access
+**Usecase:** You want to allow access to your Domino via a native NRPC protocol.
+
+**Filename:** `lb-nrpc.yaml`
+
+**Command:**
+
+```
+helm upgrade alpha pkunc/domino \
+  --install \
+  --namespace domino \
+  --create-namespace \
+  --values examples/lb-nrpc.yaml \
+  --atomic
+```
 
 
 ## Reinstalling server with existing IDs (cert, server, admin)
 Creates a Domino server with existing identities. \
 Uses existing cert.id, server.id and admin.id. \
 
-**Usecase:** Good for dev / testing / education servers, where you want to reuse existing server identity. \
-Also an example of config values thta you can reuse in more complex server configurations.
+**Usecase:** Good for dev / testing / education servers where you want to reuse existing server identity. \
+Also, an example of config values that you can reuse in more complex server configurations.
 
 **Filename:** `existing-ids.yaml`
 
@@ -117,14 +181,13 @@ helm upgrade alpha pkunc/domino \
 ```
 
 
-
 ## New server with existing IDs (cert, admin)    TODO
 Creates new Domino server, in a new Domino domain. \
-Uses existing cert.id and admin.id. \
+Uses existing cert.id and admin.id.
 
 **Usecase:** Good for dev / testing / education servers, where you want to reuse existing admin ID.
 
-**Filename:** `reuse-admin.yaml`
+**Filename:** `existing-admin.yaml`
 
 **Command:**
 ```
@@ -132,29 +195,13 @@ helm upgrade alpha pkunc/domino \
   --install \
   --namespace domino \
   --create-namespace \
-  --values examples/reuse-admin.yaml \
+  --values examples/existing-admin.yaml \
   --set-file files.certID=examples/ids/cert.id \
   --set-file files.adminID=examples/ids/admin.id \
   --atomic
 ```
 
-## New server with existing IDs (cert, admin, server)
-Similar as the previous usecase, but this time also server.id is used.
+## Additional server
 
-**Usecase:** Good for dev / testing / education servers, where you want to reuse existing admin and server IDs.
 
-**Filename:** `reuse-admin-server.yaml`
-
-**Command:**
-```
-helm upgrade alpha pkunc/domino \
-  --install \
-  --namespace domino \
-  --create-namespace \
-  --values examples/reuse-admin.yaml \
-  --set-file files.certID=examples/ids/cert.id \
-  --set-file files.serverID=examples/ids/server.id \
-  --set-file files.adminID=examples/ids/admin.id \
-  --atomic
-```
-
+## Reinstalling server with existing IDs (cert, server, admin) - full config
