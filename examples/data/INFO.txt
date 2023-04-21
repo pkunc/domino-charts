@@ -1,0 +1,2 @@
+Put files you want to upload to the pod into this folder.
+Example: *.nsf databases
