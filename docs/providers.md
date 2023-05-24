@@ -17,7 +17,7 @@ My comments to the different Kubernetes providers or Kubernetes distributions.
 
 
 ## AWS EKS
-- Kubernetes manager service, by Amazon.
+- Kubernetes managed service, by Amazon.
 - For a quick cluster creation, use [eksctl](https://eksctl.io/) tool.
 - EKS does not deploy CSI driver by default. YOu have to install it manually. \
   More info: [Amazon EBS CSI driver](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html)
@@ -32,7 +32,7 @@ My comments to the different Kubernetes providers or Kubernetes distributions.
 
 
 ## Azure AKS
-- Kubernetes manager service, by Microsoft.
+- Kubernetes managed service, by Microsoft.
 - Several  **StorageClesses** created in the cluster, of of the box. \
   You can use _managed-csi_ (default) or _managed-csi-premium_, for example. \
   All classes are enabled for Volume Expansion.
@@ -45,6 +45,10 @@ My comments to the different Kubernetes providers or Kubernetes distributions.
 
 
 ## Google GKE
+- Kubernetes managed service, by Microsoft.
+- Several  **StorageClesses** created in the cluster, of of the box. \
+  You can use _standard-rwo (default), _standard_ or _premium-rwo_.
+- GKE offers its Ingress Controler ([info](https://cloud.google.com/kubernetes-engine/docs/concepts/ingress)), but I deployed Ingress NGINX which works fine.
 
 
 
